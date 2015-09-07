@@ -1,6 +1,5 @@
 // ==UserScript==
 // @name         GoodReads edition language finder
-// @namespace    http://your.homepage/
 // @version      0.1
 // @description  checks wheter there is an edition with given language and adds a link to found edition to book control div 
 // @require      http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js 
