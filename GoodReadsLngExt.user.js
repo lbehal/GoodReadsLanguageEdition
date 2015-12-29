@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         GoodReads edition language finder
 // @namespace    gdrs
-// @version 1.3
+// @version 1.4
 // @description  checks wheter there is an edition with given language and adds a link to found edition to book control div 
 // @require      http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js 
 // @author       Ladislav Behal
@@ -47,7 +47,7 @@ var getEditions = function(ref, data)
 var getBookDetail = function(ref, url) {  
     $1.get(url).success(function(bookDetail) { 
         //extract 
-        var link = $1($1(bookDetail).find("div.otherEditionsActions a:contains('all editions')")).attr('href');        
+        var link = $1($1(bookDetail).find("div.otherEditionsActions a:contains('All Editions')")).attr('href');        
         if(link !== undefined)
         {
             debug("getting edition details for "+ link);
