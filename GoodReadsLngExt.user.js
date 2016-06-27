@@ -51,7 +51,7 @@ var getBookDetail = function(ref, url) {
         if(link !== undefined)
         {
             debug("getting edition details for "+ link);
-            $1.get(link+"?utf8=✓&per_page=100&expanded=true").success(function(data) {       
+            $1.get(link+"?utf8=✓&per_page=10000&expanded=true").success(function(data) {       
                 getEditions(ref, data);
             }).error(function(jqXHR, textStatus, errorThrown) {
                 debug("error:"+textStatus+" "+errorThrown);
