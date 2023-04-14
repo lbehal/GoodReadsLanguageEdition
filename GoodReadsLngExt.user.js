@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         GoodReads edition language finder
 // @namespace    gdrs
-// @version     1.6
+// @version     1.7
 // @description  checks wheter there is an edition with given language and adds a link to found edition to book control div 
 // @require      http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js 
 // @author       Ladislav Behal
@@ -22,7 +22,6 @@ var debug = function(x) {
 };
 
 window.onload = () => {
-    debugger;
   var currentUrl = window.location.href;
     //https://www.goodreads.com/book/show/18007564-the-martian?from_search=true&from_srp=true&qid=DJKxvjpoXZ&rank=1
     var match = currentUrl.match(/goodreads.com\/book\/show\/(\d+)/);
@@ -45,18 +44,30 @@ var loadingimage = "<img alt='' src='http://forum.xda-developers.com/clientscrip
 var getEditions = function(ref, data)
 {
     var status = $1($1(ref).find('#editiCheckingStatus'));
-        
+       
     var editionData = $1($1($1($1(data).find("div.editionData")).has("div.dataValue:contains('"+language+"'):first")).find("a.bookTitle"));
     if(editionData !== undefined && editionData.exists())
-    {              
+    {
+		var langDivContainer = $1("<div class='langEditionContainer'></div>");
+		 debugger;
+
         if(status !== undefined)
             status.remove();
 
-        $1(ref).append(image);
-        $1(ref).append(" ")
-        editionData.removeClass();
+		$1(langDivContainer).append("<br>");
+        $1(langDivContainer).append(image);
+        $1(langDivContainer).append(" ")
+
+		editionData.removeClass();
         editionData.toggleClass("smallText");
-        editionData.appendTo(ref);
+
+		langDivContainer.append(editionData);
+
+		langDivContainer.find("a").each(function() {
+			$1(this).after("<span> </span>");
+		});
+
+        langDivContainer.appendTo(ref);
     }else
     {
         status.text('Edition language not found');
@@ -67,7 +78,7 @@ var getEditions = function(ref, data)
 var getBookDetail = function(ref, url) {  
     $1.get(url).success(function(bookDetail) { 
         //extract
-        debugger;
+        
         //var link = $1($1(bookDetail).find("div.otherEditionsActions a:contains('All Editions')")).attr('href');
         var match = bookDetail.match(/https:\/\/www.goodreads.com\/work\/editions\/\d+/);
         var link = $1($1(bookDetail).find("a[href^='https://www.goodreads.com/work/editions/']:first")).attr('href');
@@ -86,12 +97,17 @@ var getBookDetail = function(ref, url) {
     });
 };
 
-$1(".wtrButtonContainer").each(function() {     
+$1(".wtrButtonContainer").each(function() {
+
      var status = $1("<div id='editiCheckingStatus'><img alt='' src='https://raw.githubusercontent.com/Marvel999/Android-Loading-Animation/master/LoadingAnimation/src/main/res/drawable/triad_ring.gif'  width='16' height='16'> Checking editions...</div>");
-    
-    $1(this).height("+=35");
-     $1(this).append(status);
-    var bookId = $1($1(this).find('input#book_id:first')).attr('value');
-    getBookDetail($1(this), "https://www.goodreads.com/book/show/"+bookId)
+    var element = $1(this);
+	var parentTd = element.closest("td:has(a.bookTitle)");
+  if (parentTd.length > 0) {
+    element = parentTd;
+  }
+    element.height("+=35");
+     element.append(status);
+    var bookId = $1(element.find('input#book_id:first')).attr('value');
+    getBookDetail(element, "https://www.goodreads.com/book/show/"+bookId)
 
 });
